@@ -66,26 +66,53 @@ entries = ["nop +283", "acc +26", "acc +37", "acc +6", "jmp +109", "acc +10", "j
            "jmp -524", "jmp +1", "acc +46", "acc -6", "jmp -582", "acc +28", "acc +38", "acc -17", "acc +2", "jmp -432",
            "acc +35", "nop -550", "acc -6", "jmp -394", "acc +38", "acc +49", "nop -99", "acc +50", "jmp +1"]
 
-#entries = ["nop +0", "acc +1", "jmp +4", "acc +3", "jmp -3", "acc -99", "acc +1", "jmp -4", "acc +6"]
+# entries = ["nop +0", "acc +1", "jmp +4", "acc +3", "jmp -3", "acc -99", "acc +1", "jmp -4", "acc +6"]
 
-acc = 0
-index = 0
+execution_index = 0
+execution_acc = 0
+
+swapped_index = 0
+swapped_index_flag = False
+swapped_acc = 0
+swapped_move = ""
 
 unique_index_control_list = []
 
-while index < len(entries):
-    move_split = entries[index].split(" ")
+while execution_index < len(entries):
+    move_split = entries[execution_index].split(" ")
+    # SWAP UNIQUE jmp TO nop
+    if (move_split[0] == "nop" or move_split[0] == "jmp") and not swapped_index_flag:
+        swapped_index = execution_index
+        swapped_index_flag = True
+        swapped_acc = execution_acc
+        swapped_move = move_split.copy()
 
-    if index in unique_index_control_list:
-        print(acc)
-        break
-    else:
-        unique_index_control_list.append(index)
+        if move_split[0] == "nop":
+            move_split[0] = "jmp"
+        elif move_split[0] == "jmp":
+            move_split[0] = "nop"
 
+    try:
+        # LOOP CHECKER
+        test_index = unique_index_control_list.index(execution_index)
+        # ROLLBACK
+        unique_index_control_list = unique_index_control_list[:test_index]
+        execution_index = swapped_index
+        swapped_index_flag = False
+        execution_acc = swapped_acc
+        move_split = swapped_move
+        unique_index_control_list.append(execution_index)
+
+    except ValueError:
+        unique_index_control_list.append(execution_index)
+
+    # ACTION
     if move_split[0] == "acc":
-        acc += int(move_split[1])
-        index += 1
+        execution_acc += int(move_split[1])
+        execution_index += 1
     if move_split[0] == "nop":
-        index += 1
+        execution_index += 1
     if move_split[0] == "jmp":
-        index += int(move_split[1])
+        execution_index += int(move_split[1])
+
+print(execution_acc)
