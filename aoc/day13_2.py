@@ -1,37 +1,76 @@
-# available_buses = ["29", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "41",
-#                    "x", "x", "x", "x", "x", "x", "x", "x", "x", "661", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x",
-#                    "x", "x", "13", "17", "x", "x", "x", "x", "x", "x", "x", "x", "23", "x", "x", "x", "x", "x", "x",
-#                    "x", "521", "x", "x", "x", "x", "x", "37", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x",
-#                    "x", "19"]
+available_buses = ["29", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "41",
+                   "x", "x", "x", "x", "x", "x", "x", "x", "x", "661", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x",
+                   "x", "x", "13", "17", "x", "x", "x", "x", "x", "x", "x", "x", "23", "x", "x", "x", "x", "x", "x",
+                   "x", "521", "x", "x", "x", "x", "x", "37", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x", "x",
+                   "x", "19"]
 
-available_buses = ['7', '13', 'x', 'x', '59', 'x', '31', '19']
+#available_buses = ['7', '13', 'x', 'x', '59', 'x', '31', '19']
+#available_buses = ['17', 'x', '13', '19']
+#available_buses = ['67', '7', '59', '61']
+# available_buses = ['67', 'x', '7', '59', '61']
+# available_buses = ['67', '7', 'x', '59', '61']
+# available_buses = ['1789', '37', '47', '1889']
 
+real_buses = []
+bus_delay = []
 
-def filter_fun(variable):
+for num, bus in enumerate(available_buses, start=0):
+    int_bus = 0
+    delay = 0
+
     try:
-        int_variable = int(variable)
-        return True
+        int_bus = int(bus)
     except:
-        return False
+        int_bus = 0
 
+    if int_bus > 0:
+        real_buses.append(int_bus)
+        bus_delay.append(num)
 
-def map_fun(variable):
-    return int(variable)
-
-
-filtered_buses = filter(filter_fun, available_buses)
-int_buses = list(map(map_fun, filtered_buses))
-int_buses.sort()
+delay_index = 1
+bus_step = real_buses[0]
 
 departure_bus = 0
-departure_diff = 0
-while departure_bus == 0:
-    for bus in int_buses:
-        if (earliest_departure + departure_diff) % bus == 0:
-            departure_bus = bus
-            break
+valid_departure = False
 
-    if departure_bus == 0:
-        departure_diff += 1
+while not valid_departure:
+    if delay_index == len(real_buses):
+        valid_departure = True
+    else:
+        departure_bus += bus_step
+        attempting_departure = (departure_bus + bus_delay[delay_index]) % real_buses[delay_index] == 0
+        if attempting_departure:
+            bus_step *= real_buses[delay_index]
+            print(bus_step)
+            delay_index += 1
 
-print(departure_bus * departure_diff)
+# bus_step = real_buses[0]
+# print(bus_step)
+#
+# # departure_bus = 0
+# departure_bus = 100000000000000 - (100000000000000 % bus_step)
+# valid_departure = False
+#
+# while not valid_departure:
+#     print('minute ' + str(departure_bus))
+#     departure_bus += bus_step
+#     delay_index = 0
+#
+#     attempting_departure = departure_bus % real_buses[delay_index] == 0
+#
+#     while attempting_departure:
+#         delay_index += 1
+#         if delay_index == len(real_buses):
+#             valid_departure = True
+#             attempting_departure = False
+#         else:
+#             attempting_departure = (departure_bus + bus_delay[delay_index]) % real_buses[delay_index] == 0
+#             if attempting_departure and real_buses[delay_index] > bus_step:
+#                 bus_step = real_buses[delay_index]
+#                 print('step changed to ' + str(bus_step) + ' at the minute ' + str(departure_bus))
+#
+
+#
+print(departure_bus)
+
+exit(0)
