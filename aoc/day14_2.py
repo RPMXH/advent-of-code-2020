@@ -170,6 +170,7 @@ entries = ["mask = 1010X101010010101X00X00011XX11011111", "mem[1303] = 728", "me
            "mask = X110X1X10110101010X0000010100X01X000", "mem[59987] = 195313", "mem[12183] = 28345",
            "mem[5495] = 47272", "mem[19742] = 8940"]
 
+
 # entries = ["mask = 000000000000000000000000000000X1001X", "mem[42] = 100",
 #            "mask = 00000000000000000000000000000000X0XX", "mem[26] = 1"]
 
@@ -185,21 +186,7 @@ def binary_to_integer(bin_value):
 
 def binary_after_mask(bin_value, bin_mask):
     result = ''
-    first_bit = False
     for index in range(0, len(bin_mask)):
-        # if not first_bit and bin_value[index] == '1':
-        #     first_bit = True
-        #
-        # if first_bit:
-        #     if bin_mask[index] == '0':
-        #         result = result + bin_value[index]
-        #     else:
-        #         result = result + bin_mask[index]
-        # else:
-        #     if bin_mask[index] == '1':
-        #         result = result + bin_value[index]
-        #     else:
-        #         result = result + '0'
 
         if bin_mask[index] == '0':
             result = result + bin_value[index]
