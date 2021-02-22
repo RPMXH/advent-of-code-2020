@@ -255,11 +255,40 @@ def operate_expression(expression_result, operator, operand):
         return expression_result * int(operand)
 
 
+def addition_operation(expression_parts, index):
+    addition_result = int(expression_parts[index - 1]) + int(expression_parts[index + 1])
+
+    new_expression_parts = []
+    i = 0
+    while i < len(expression_parts):
+        if i == index - 1:
+            new_expression_parts.append(str(addition_result))
+            i += 3
+        else:
+            new_expression_parts.append(expression_parts[i])
+            i += 1
+
+    return new_expression_parts
+
+
+def find_plus(expression_parts):
+    try:
+        return expression_parts.index("+")
+    except:
+        return -1
+
+
 def calculate_expression(expression):
+    # TODO - calculate additions first
+
     parts = expression.split(" ")
 
-    expression_result = int(parts[0])
+    addition_index = find_plus(parts)
+    while addition_index > -1:
+        parts = addition_operation(parts, addition_index)
+        addition_index = find_plus(parts)
 
+    expression_result = int(parts[0])
     for moving_expression in range(1, len(parts) - 1, 2):
         expression_result = \
             operate_expression(expression_result, parts[moving_expression], parts[moving_expression + 1])
